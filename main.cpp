@@ -135,17 +135,7 @@ void update_ball(Ball *ball, Player *p_right, Player *p_left)
         // handle slowdown
         if (score > 0)
         {
-            if ((pl_y > b_y + 2 * r + 1 && b_y - r < pl_y + h) ||
-                (pr_y > b_y + 2 * r + 1 && b_y - r < pr_y + h) ||
-                (pl_y + h < b_y - 2 * r + 1 && b_y + r > pl_y) ||
-                (pr_y + h < b_y - 2 * r + 1 && b_y + r > pr_y))
-            {
-                ball->vx = -ball->vx / 2;
-            }
-            else
-            {
-                ball->vx = -ball->vx;
-            }
+            ball->vx = -ball->vx / 2;
         }
         else
         {
@@ -163,8 +153,15 @@ void update_ball(Ball *ball, Player *p_right, Player *p_left)
         ball->vy = -ball->vy;
     }
 
+    int y_offset = r;
+
+    if (ball->vy != 0)
+    {
+        y_offset *= 2;
+    }
+
     // handle right player bounce
-    if (b_x + r == pr_x && (b_y >= pr_y - 2 * r && b_y <= pr_y + h + 2 * r))
+    if (b_x + r == pr_x && (b_y >= pr_y - y_offset && b_y <= pr_y + h + y_offset))
     {
         // middle bounce
         if (b_y >= (pr_y + h / 2) - r && b_y <= (pr_y + h / 2) + r)
@@ -174,14 +171,14 @@ void update_ball(Ball *ball, Player *p_right, Player *p_left)
         }
 
         // top bounce
-        if (b_y < (pr_y + h / 2) - r && b_y >= pr_y)
+        if (b_y < (pr_y + h / 2) - r && b_y >= pr_y - y_offset)
         {
             ball->vx = -ball->vx;
             ball->vy = -5;
         }
 
         // bottom bounce
-        if (b_y > (pr_y + h / 2) + r && b_y <= pr_y + h)
+        if (b_y > (pr_y + h / 2) + r && b_y <= pr_y + h + y_offset)
         {
             ball->vx = -ball->vx;
             ball->vy = 5;
@@ -209,7 +206,7 @@ void update_ball(Ball *ball, Player *p_right, Player *p_left)
     }
 
     // handle left player bounce
-    if (b_x - r == pl_x + w && (b_y >= pl_y - 2 * r && b_y <= pl_y + h + 2 * r))
+    if (b_x - r == pl_x + w && (b_y >= pl_y - y_offset && b_y <= pl_y + h + y_offset))
     {
         // middle bounce
         if (b_y >= (pl_y + h / 2) - r && b_y <= (pl_y + h / 2) + r)
@@ -219,14 +216,14 @@ void update_ball(Ball *ball, Player *p_right, Player *p_left)
         }
 
         // top bounce
-        if (b_y < (pl_y + h / 2) - r && b_y >= pl_y)
+        if (b_y < (pl_y + h / 2) - r && b_y >= pl_y - y_offset)
         {
             ball->vx = -ball->vx;
             ball->vy = -5;
         }
 
         // bottom bounce
-        if (b_y > (pl_y + h / 2) + r && b_y <= pl_y + h)
+        if (b_y > (pl_y + h / 2) + r && b_y <= pl_y + h + y_offset)
         {
             ball->vx = -ball->vx;
             ball->vy = 5;
